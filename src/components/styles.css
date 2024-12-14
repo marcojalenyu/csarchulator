@@ -1,0 +1,47 @@
+:root {
+    
+    /* Defaults */
+
+    --font-family: 'Helvetica', sans-serif;
+
+    --btn-color: #007afe;
+    --btn-color-text: white;
+
+    --link-color: #007afe;
+
+    /* Light Mode */
+
+    --bg-color: #fafafa;
+    --text-color: #000000;
+
+    /* Dark Mode */
+
+    --bg-color-dark: #202020;
+    --text-color-dark: #ffffff;
+
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+button {
+    background-color: var(--btn-color);
+    color: var(--btn-color-text);
+}
+
+a {
+    color: var(--link-color);
+}
+
+a:visited {
+    color: var(--link-color);
+}
+
+.nav-title {
+    color: var(--text-color);
+    font-size: x-large;
+    font-weight: bold;
+}
