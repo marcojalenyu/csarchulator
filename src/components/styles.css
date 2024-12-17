@@ -21,10 +21,22 @@
 
 }
 
-body {
+body.light, body.light a {
     font-family: var(--font-family);
     background-color: var(--bg-color);
     color: var(--text-color);
+    text-decoration: none;
+}
+
+body.dark, body.dark a {
+    font-family: var(--font-family);
+    background-color: var(--bg-color-dark);
+    color: var(--text-color-dark);
+    text-decoration: none;
+}
+
+body.dark .logo-img {
+    filter: invert(1);
 }
 
 button {
@@ -32,16 +44,29 @@ button {
     color: var(--btn-color-text);
 }
 
-a {
-    color: var(--link-color);
+.form-check-input:checked {
+    background-color: black;
+    border-color: black;
 }
 
-a:visited {
-    color: var(--link-color);
+.cursor {
+    display: inline-block;
+    animation: blink-caret 0.75s step-end infinite;
 }
 
-.nav-title {
-    color: var(--text-color);
-    font-size: x-large;
-    font-weight: bold;
+.cursor::after {
+    content: '|';
+}
+
+@keyframes blink-caret {
+    from, to {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.footer {
+    font-size: 0.5em;
 }
