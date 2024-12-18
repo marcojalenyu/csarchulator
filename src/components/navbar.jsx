@@ -3,16 +3,22 @@ import { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import './styles.css'
 import Logo from './logo';
+import Menu from "./menu";
 
 const Navbar = () => {
 
   const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
   const initialTheme = prefersDarkScheme ? 'dark' : 'light';
   const [theme, setTheme] = useState(initialTheme);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     document.body.className = theme;
   }, [theme]);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
     <nav className="navbar my-1 w-100">
@@ -33,9 +39,10 @@ const Navbar = () => {
           />
         </div>
         <div className="links">
-          <a className="fw-bold" href="/">Choose a converter... </a>
+          <button className="borderless fw-bold" onClick={toggleMenu}>Choose a converter...</button>
         </div>
       </div>
+      <Menu isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
     </nav>
   );
 }
