@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import './styles.css'
 import Logo from './logo';
@@ -23,10 +24,10 @@ const Navbar = () => {
   return (
     <nav className="navbar my-1 w-100">
 
-      <a className="fs-5 fw-bold d-inline-flex align-items-center" href="/">
+      <Link className="fs-5 fw-bold d-inline-flex align-items-center" to="/">
         <Logo />
         <div className="ms-1 font-we">CSARCHulator</div>
-      </a>
+      </Link>
       
       <div className="d-flex flex-column align-items-end">
         <div className="form-check form-switch mb-1">
