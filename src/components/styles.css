@@ -13,11 +13,13 @@
 
     --bg-color: #fafafa;
     --text-color: #000000;
+    --output-color: #006937;
 
     /* Dark Mode */
 
     --bg-color-dark: #202020;
     --text-color-dark: #ffffff;
+    --output-color-dark: #6dc871;
 
 }
 
@@ -39,7 +41,7 @@ body.dark .logo-img {
     filter: invert(1);
 }
 
-button {
+.btn {
     background-color: var(--btn-color);
     color: var(--btn-color-text);
 }
@@ -76,6 +78,8 @@ button.borderless {
 .footer {
     font-size: 0.5em;
 }
+
+/** Menu Overlay **/
 
 .menu-overlay {
     position: fixed;
@@ -148,4 +152,42 @@ body.dark .menu {
 
 .close-btn:hover {
     opacity: 0.5;
+}
+
+/** Template Page **/
+
+textarea {
+    resize: none;
+}
+
+.io-box {
+    border: 3px solid;
+    border-radius: 18px;
+}
+
+body.light .output {
+    border-color: var(--output-color);
+    color: var(--output-color)
+}
+
+body.dark .output {
+    border-color: var(--output-color-dark);
+    color: var(--output-color-dark)
+}
+
+/** Selecting Tabs **/
+
+.nav-item-type:hover {
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+body.light .active {
+    background-color: var(--bg-color-dark);
+    color: var(--text-color-dark);
+}
+
+body.dark .active {
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }

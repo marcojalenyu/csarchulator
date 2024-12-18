@@ -1,6 +1,7 @@
 "use client";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css'
+import { Link } from 'react-router-dom';
 
 const Menu = ({ isMenuOpen, toggleMenu }) => {
 
@@ -14,20 +15,8 @@ const Menu = ({ isMenuOpen, toggleMenu }) => {
                 </svg>
               </button>
               <div className="menu-links list-group">
-                {/* <a className="list-group-item list-group-item-action" href="/binary">Binary</a>
-                <a className="list-group-item list-group-item-action" href="/bcd">BCD</a>
-                <a className="list-group-item list-group-item-action" href="/unicode">Unicode</a>
-                <a className="list-group-item list-group-item-action" href="/boolean-algebra">Boolean Algebra</a>
-                <a className="list-group-item list-group-item-action" href="/logic-gates">Logic Gates</a>
-                <a className="list-group-item list-group-item-action" href="/cpu">CPU</a>
-                <a className="list-group-item list-group-item-action" href="/memory">Memory</a>
-                <a className="list-group-item list-group-item-action" href="/assembly">Assembly</a>
-                <a className="list-group-item list-group-item-action" href="/os">OS</a>
-                <a className="list-group-item list-group-item-action" href="/networking">Networking</a>
-                <a className="list-group-item list-group-item-action" href="/security">Security</a>
-                <a className="list-group-item list-group-item-action" href="/web">Web</a>
-                <a className="list-group-item list-group-item-action" href="/databases">Databases</a>
-                <a className="list-group-item list-group-item-action" href="/cloud">Cloud</a> */}
+                <Link className="list-group-item list-group-item-action" to="/unicode" onClick={toggleMenu}>Unicode-UTF</Link>
+                <Link className="list-group-item list-group-item-action" to="/utf" onClick={toggleMenu}>UTF-Unicode</Link>
               </div>
             </div>
           </div>
