@@ -7,7 +7,7 @@ import logo3 from '../assets/logo3.svg';
 import logo4 from '../assets/logo4.svg';
 
 
-const Logo = ({ width = 50, height = 50, type = 1 }) => {
+const Logo = ({ size = 50, type = 1 }) => {
 
     var logo;
 
@@ -30,7 +30,7 @@ const Logo = ({ width = 50, height = 50, type = 1 }) => {
     
     return (
         <div className="d-inline">
-            <img className="logo-img" src={logo} alt="logo" width={width} height={height}/>
+            <img className="logo-img" src={logo} alt="logo" width={size} height={size}/>
         </div>
     );
 }
