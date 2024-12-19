@@ -13,8 +13,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="unicode" element={<UnicodeUtf />} />
-          <Route path="utf" element={<UnicodeUtf />} />
+          <Route path="unicode-utf" element={<UnicodeUtf from='Unicode' to='UTF'/>} />
+          <Route path="utf-unicode" element={<UnicodeUtf from='UTF' to='Unicode'/>} />
           <Route path="*" element={<Error />} />
         </Route>
       </Routes>

@@ -175,6 +175,19 @@ body.dark .output {
     color: var(--output-color-dark)
 }
 
+.copy-btn {
+    filter: grayscale(1);
+    position: absolute;
+    right: 5%;
+    top: 75%;
+    z-index: 1;
+}
+
+.copy-btn:hover {
+    cursor: pointer;
+    opacity: 0.5;
+}
+
 /** Selecting Tabs **/
 
 .nav-item-type:hover {

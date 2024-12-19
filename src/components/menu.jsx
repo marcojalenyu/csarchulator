@@ -15,8 +15,8 @@ const Menu = ({ isMenuOpen, toggleMenu }) => {
                 </svg>
               </button>
               <div className="menu-links list-group">
-                <Link className="list-group-item list-group-item-action" to="/unicode" onClick={toggleMenu}>Unicode-UTF</Link>
-                <Link className="list-group-item list-group-item-action" to="/utf" onClick={toggleMenu}>UTF-Unicode</Link>
+                <Link className="list-group-item list-group-item-action" to="/unicode-utf" onClick={toggleMenu}>Unicode-UTF</Link>
+                <Link className="list-group-item list-group-item-action" to="/utf-unicode" onClick={toggleMenu}>UTF-Unicode</Link>
               </div>
             </div>
           </div>
