@@ -69,7 +69,7 @@ export class convert {
             }
             let infExp = this.convertToBin(this.expSize, this.expBias * 2 + 1);
             let infMts = [];
-            this.pushToOutput (infExp, infMts);
+            this.pushToOutput(infExp, infMts);
             var {binStr, hexStr} = this.getOutputStr();
             return {binStr, hexStr};
         }
@@ -151,7 +151,7 @@ export class convert {
         // Get binary representation for exponent
         let expBits = this.convertToBin(this.expSize, (this.expDegree + this.expBias).toString());
 
-        this.pushToOutput (expBits, frcBits);
+        this.pushToOutput(expBits, frcBits);
         // this.printOutput ();
 
         // Return binary and hex strings
