@@ -17,6 +17,8 @@ const Menu = ({ isMenuOpen, toggleMenu }) => {
               <div className="menu-links list-group">
                 <Link className="list-group-item list-group-item-action" to="/unicode-utf" onClick={toggleMenu}>Unicode-UTF</Link>
                 <Link className="list-group-item list-group-item-action" to="/utf-unicode" onClick={toggleMenu}>UTF-Unicode</Link>
+                <Link className="list-group-item list-group-item-action" to="/decimal-ftp" onClick={toggleMenu}>Decimal-Floating Point</Link>
+                <Link className="list-group-item list-group-item-action" to="/decimal-bcd" onClick={toggleMenu}>Decimal-BCD</Link>
               </div>
             </div>
           </div>

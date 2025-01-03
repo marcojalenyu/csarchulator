@@ -6,6 +6,8 @@ import Layout from './components/layout';
 import Home from './app/home';
 import Error from './app/error';
 import UnicodeUtf from './app/unicode-utf';
+import DecimalFTP from './app/decimal-ftp';
+
 
 function App() {
   return (
@@ -15,6 +17,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="unicode-utf" element={<UnicodeUtf from='Unicode' to='UTF'/>} />
           <Route path="utf-unicode" element={<UnicodeUtf from='UTF' to='Unicode'/>} />
+          <Route path="decimal-ftp" element={<DecimalFTP from='Decimal' to='FTP'/>} />
           <Route path="*" element={<Error />} />
         </Route>
       </Routes>
