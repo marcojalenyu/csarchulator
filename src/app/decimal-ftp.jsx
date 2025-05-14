@@ -8,16 +8,13 @@ const DecimalFTP = () => {
     const [rounding, setRounding] = useState("truncate");
 
     // Individual output components
-    const [outputBinary, setOutputBinary] = useState("");
     const [outputSign, setOutputSign] = useState("");
     const [outputExponent, setOutputExponent] = useState("");
     const [outputMantissa, setOutputMantissa] = useState("");
-    const [outputHex, setOutputHex] = useState("");
     const [copySuccess, setCopySuccess] = useState('');
 
     const splitBinary = (binary) => {
         const sign = binary.substring(0, 1);
-        setOutputSign(sign);
 
         let exponent = "";
         let mantissa = "";
@@ -39,35 +36,47 @@ const DecimalFTP = () => {
                 break;
         }
 
-        setOutputExponent(exponent);
-        setOutputMantissa(mantissa);
+        return { sign, exponent, mantissa };
     };
 
-    const splitBinaryBinComponents = () => {
-        // Reverse output_exponent and split into groups of 4 then reverse again
-        let reversed_exponent = outputExponent.split("").reverse().join("");
-        let exponent_groups = [];
-        for (let i = 0; i < reversed_exponent.length / 4; i++) {
-            exponent_groups.push(reversed_exponent.substring(i * 4, (i + 1) * 4));
+    const splitBinaryBinComponents = (sign, exponent, mantissa) => {
+        // Reverse exponent and split into groups of 4, then reverse again
+        let reversedExponent = exponent.split("").reverse().join("");
+        let exponentGroups = [];
+        for (let i = 0; i < reversedExponent.length / 4; i++) {
+            exponentGroups.push(reversedExponent.substring(i * 4, (i + 1) * 4));
         }
-        let output_exponent = exponent_groups.join(" ").split("").reverse().join("");
+        let outputExponent = exponentGroups.join(" ").split("").reverse().join("");
 
-        // Reverse output_mantissa and split into groups of 4 then reverse again
-        let reversed_mantissa = outputMantissa.split("").reverse().join("");
-        let mantissa_groups = [];
-        for (let i = 0; i < reversed_mantissa.length / 4; i++) {
-            mantissa_groups.push(reversed_mantissa.substring(i * 4, (i + 1) * 4));
+        // Same for mantissa
+        let reversedMantissa = mantissa.split("").reverse().join("");
+        let mantissaGroups = [];
+        for (let i = 0; i < reversedMantissa.length / 4; i++) {
+            mantissaGroups.push(reversedMantissa.substring(i * 4, (i + 1) * 4));
         }
-        let output_mantissa = mantissa_groups.join(" ").split("").reverse().join("");
+        let outputMantissa = mantissaGroups.join(" ").split("").reverse().join("");
 
-        let output_binary = outputSign + " " + output_exponent + " " + output_mantissa;
-        setOutputBinary(output_binary);
+        return `${sign} ${outputExponent} ${outputMantissa}`;
     };
 
     const splitHex = (hex) => {
         const hexGroups = hex.match(/.{1,4}/g) || [];
-        setOutputHex(hexGroups.join(" "));
+        return hexGroups.join(" ");
     };
+
+    const splitComponents = (bin, hex) => {
+        const { sign, exponent, mantissa } = splitBinary(bin);
+        const formattedBinary = splitBinaryBinComponents(sign, exponent, mantissa);
+        const formattedHex = splitHex(hex);
+
+        // Also update state if needed
+        setOutputSign(sign);
+        setOutputExponent(exponent);
+        setOutputMantissa(mantissa);
+
+        return { formattedBinary, formattedHex };
+    };
+
 
     const handleConvert = () => {
         try {
@@ -75,18 +84,11 @@ const DecimalFTP = () => {
             const converter = new convert(input, expDegree, precision, rounding);
             const { binStr, hexStr } = converter.process();
 
-            // Set initial outputs
-            setOutputBinary(binStr);
-            setOutputHex(hexStr);
+            const { formattedBinary, formattedHex } = splitComponents(binStr, hexStr);
 
-            // Automatically process outputs
-            splitBinary(binStr);
-            splitBinaryBinComponents();
-            splitHex(hexStr);
-
-            setOutput(`Binary: ${outputBinary}\nHexadecimal: ${outputHex}`);
-
-        } catch (error) {
+            setOutput(`Binary: ${formattedBinary}\nHexadecimal: ${formattedHex}`);
+        } 
+        catch (error) {
             console.error("Detailed Conversion Error:", {
                 message: error.message,
                 name: error.name,
