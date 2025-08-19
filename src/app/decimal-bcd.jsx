@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { convert } from "./decimal-ftp-convert";
+import { convertBCD } from "./decimal-bcd-convert";
+import { roundDecimal } from './dom_rounding.js';
 
-const DecimalFTP = () => {
+const DecimalBCD = () => {
     const [input, setInput] = useState("");
     const [output, setOutput] = useState("");
     const [precision, setPrecision] = useState("single");
@@ -76,18 +77,29 @@ const DecimalFTP = () => {
         return { formattedBinary, formattedHex };
     };
 
-
     const handleConvert = () => {
         try {
             const expDegree = 0;
-            const converter = new convert(input, expDegree, precision, rounding);
+            let rounded;
+            switch (precision) {
+                case "single":
+                    rounded = roundDecimal(input, 7, rounding, expDegree);
+                    break
+                case "double":
+                    rounded = roundDecimal(input, 16, rounding, expDegree);
+                    break
+                case "quadruple":
+                    rounded = roundDecimal(input, 34, rounding, expDegree);
+                    break
+            }
+            const converter = new convertBCD(rounded.integer, rounded.exponent, rounded.positive, precision);
             const { binStr, hexStr } = converter.process();
 
             const { formattedBinary, formattedHex } = splitComponents(binStr, hexStr);
 
             setOutput(`Binary: ${formattedBinary}\nHexadecimal: ${formattedHex}`);
-        } 
-        catch (error) {
+            
+        } catch (error) {
             console.error("Detailed Conversion Error:", {
                 message: error.message,
                 name: error.name,
@@ -114,7 +126,7 @@ const DecimalFTP = () => {
 
     return (
         <div className="container my-4 flex-grow-1 text-start">
-            <h1 className="mb-4 fs-5 fw-bold">Decimal to Floating-Point Converter</h1>
+            <h1 className="mb-4 fs-5 fw-bold">Decimal to BCD Converter</h1>
             <div className="row">
                 {/* Input Section */}
                 <div className="io-box col-md-5 p-0">
@@ -225,4 +237,4 @@ const DecimalFTP = () => {
     );
 };
 
-export default DecimalFTP;
+export default DecimalBCD;
