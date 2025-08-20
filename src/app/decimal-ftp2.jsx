@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { convert } from "./decimal-ftp-convert";
 
-const DecimalFTP = () => {
+const DecimalFTP2 = () => {
     const [input, setInput] = useState("");
     const [output, setOutput] = useState("");
     const [precision, setPrecision] = useState("single");
@@ -114,7 +114,7 @@ const DecimalFTP = () => {
 
     return (
         <div className="container my-4 flex-grow-1 text-start">
-            <h1 className="mb-4 fs-5 fw-bold">Decimal to Floating-Point Converter</h1>
+            <h1 className="mb-4 fs-5 fw-bold">Decimal to IEEE-754 Binary Floating-Point Converter</h1>
             <div className="row">
                 {/* Input Section */}
                 <div className="io-box col-md-5 p-0">
@@ -225,4 +225,4 @@ const DecimalFTP = () => {
     );
 };
 
-export default DecimalFTP;
+export default DecimalFTP2;

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { convertBCD } from "./decimal-bcd-convert";
+import { convertBCD } from "./decimal-bcd-convert.js";
 import { roundDecimal } from './dom_rounding.js';
 
-const DecimalBCD = () => {
+const DecimalFTP10 = () => {
     const [input, setInput] = useState("");
     const [output, setOutput] = useState("");
     const [precision, setPrecision] = useState("single");
@@ -126,7 +126,7 @@ const DecimalBCD = () => {
 
     return (
         <div className="container my-4 flex-grow-1 text-start">
-            <h1 className="mb-4 fs-5 fw-bold">Decimal to BCD Converter</h1>
+            <h1 className="mb-4 fs-5 fw-bold">Decimal to IEEE-754 Decimal Floating-Point Converter</h1>
             <div className="row">
                 {/* Input Section */}
                 <div className="io-box col-md-5 p-0">
@@ -237,4 +237,4 @@ const DecimalBCD = () => {
     );
 };
 
-export default DecimalBCD;
+export default DecimalFTP10;
