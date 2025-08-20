@@ -3,7 +3,9 @@ import { convert } from "./decimal-ftp-convert";
 
 const DecimalFTP2 = () => {
     const [input, setInput] = useState("");
-    const [output, setOutput] = useState("");
+    const [binaryOutput, setBinaryOutput] = useState("");
+    const [hexOutput, setHexOutput] = useState("");
+    const [outputFormat, setOutputFormat] = useState("binary");
     const [precision, setPrecision] = useState("single");
     const [rounding, setRounding] = useState("truncate");
 
@@ -85,7 +87,8 @@ const DecimalFTP2 = () => {
 
             const { formattedBinary, formattedHex } = splitComponents(binStr, hexStr);
 
-            setOutput(`Binary: ${formattedBinary}\nHexadecimal: ${formattedHex}`);
+            setBinaryOutput(formattedBinary);
+            setHexOutput(formattedHex);
         } 
         catch (error) {
             console.error("Detailed Conversion Error:", {
@@ -95,17 +98,19 @@ const DecimalFTP2 = () => {
                 inputData: { input, precision, rounding },
             });
 
-            setOutput(
+            setBinaryOutput(
                 `Error in conversion:\n` +
                 `Message: ${error.message}\n` +
                 `Name: ${error.name}\n` +
                 `Stack Trace:\n${error.stack}`
             );
+            setHexOutput('');
         }
     };
 
     const handleCopy = () => {
-        navigator.clipboard.writeText(output);
+        const currentOutput = outputFormat === "binary" ? binaryOutput : hexOutput;
+        navigator.clipboard.writeText(currentOutput);
         setCopySuccess('Copied!');
         setTimeout(() => {
             setCopySuccess('');
@@ -122,18 +127,21 @@ const DecimalFTP2 = () => {
                         <li className="nav-item fw-bold me-4 p-3">Precision</li>
                         <li className={`nav-item nav-item-type p-3 ${precision === "single" ? "active" : ""}`}
                             onClick={() => setPrecision("single")}
+                            style={{ minWidth: 'fit-content', textAlign: 'center' }}
                         >
-                            Single
+                            Single<br/>(32-bit)
                         </li>
                         <li className={`nav-item nav-item-type p-3 ${precision === "double" ? "active" : ""}`}
                             onClick={() => setPrecision("double")}
+                            style={{ minWidth: 'fit-content', textAlign: 'center' }}
                         >
-                            Double
+                            Double<br/>(64-bit)
                         </li>
                         <li className={`nav-item nav-item-type p-3 ${precision === "quadruple" ? "active" : ""}`}
                             onClick={() => setPrecision("quadruple")}
+                            style={{ minWidth: 'fit-content', textAlign: 'center' }}
                         >
-                            Quadruple
+                            Quadruple<br/>(128-bit)
                         </li>
                     </ul>
 
@@ -187,38 +195,55 @@ const DecimalFTP2 = () => {
                 <div className="io-box output col-md-5 p-0 position-relative">
                     <ul className="nav nav-tabs output align-items-center d-flex">
                         <li className="nav-item fw-bold me-4 p-3">Output</li>
+                        <li className={`nav-item nav-item-type p-3 ${outputFormat === "binary" ? "active" : ""}`}
+                            onClick={() => setOutputFormat("binary")}
+                        >
+                            Binary
+                        </li>
+                        <li className={`nav-item nav-item-type p-3 ${outputFormat === "hexadecimal" ? "active" : ""}`}
+                            onClick={() => setOutputFormat("hexadecimal")}
+                        >
+                            Hexadecimal
+                        </li>
                     </ul>
-                    <div className="m-3">
+                    <div className="m-3 position-relative">
                         <textarea
                             className="form-control io-box output text-black"
                             rows="5"
-                            value={output}
+                            value={outputFormat === "binary" ? binaryOutput : hexOutput}
                             readOnly
                             placeholder="Conversion result will appear here"
                         ></textarea>
+                        <button className="copy-btn borderless position-absolute" 
+                                style={{bottom: '8px', right: '8px'}} 
+                                onClick={handleCopy}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-copy" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+                            </svg>
+                            {copySuccess && <span className="copy-feedback ms-2">{copySuccess}</span>}
+                        </button>
                     </div>
 
-                    <div className="row mt-4">
-                        <div className="col-md-3">
-                            <h5>Sign:</h5>
-                            <p>{outputSign}</p>
+                    <div className="mt-4 mx-3">
+                        <div className="mb-3">
+                            <div className="p-2 border rounded bg-light">
+                                <span className="fw-bold text-black">Sign: </span>
+                                <span className="fs-6 text-black" style={{wordBreak: 'break-all'}}>{outputSign}</span>
+                            </div>
                         </div>
-                        <div className="col-md-3">
-                            <h5>Exponent:</h5>
-                            <p>{outputExponent}</p>
+                        <div className="mb-3">
+                            <div className="p-2 border rounded bg-light">
+                                <span className="fw-bold text-black">Exponent: </span>
+                                <span className="fs-6 text-black" style={{wordBreak: 'break-all'}}>{outputExponent}</span>
+                            </div>
                         </div>
-                        <div className="col-md-3">
-                            <h5>Mantissa:</h5>
-                            <p>{outputMantissa}</p>
+                        <div className="mb-3">
+                            <div className="p-2 border rounded bg-light">
+                                <span className="fw-bold text-black">Mantissa: </span>
+                                <span className="fs-6 text-black" style={{wordBreak: 'break-all'}}>{outputMantissa}</span>
+                            </div>
                         </div>
                     </div>
-                    
-                    <button className="copy-btn borderless" onClick={handleCopy}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-copy" viewBox="0 0 16 16">
-                            <path fillRule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
-                        </svg>
-                        {copySuccess && <span className="copy-feedback ms-2">{copySuccess}</span>}
-                    </button>
                 </div>
             </div>
         </div>
