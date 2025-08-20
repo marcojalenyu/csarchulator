@@ -295,7 +295,15 @@ const UnicodeUtf = ( {from, to} ) => {
                             rows="5" 
                             value={input} 
                             onChange={(e) => setInput(e.target.value)}
-                            maxLength={16} 
+                            maxLength={16}
+                            placeholder={selectedFormat === 'Unicode' 
+                                ? `Enter Unicode (00-10FFFF, plain hex)`
+                                : utfType === 'UTF-8' 
+                                    ? `Enter UTF-8 \n(1 byte: 00-7F, \n2 bytes: C080-DFBF, \n3 bytes: E08080-EFBFBF, \n4 bytes: F0808080-F4BF8F8F, plain hex)`
+                                    : utfType === 'UTF-16'
+                                        ? `Enter UTF-16 (0000-DFFF or D800DC00-DBFFDFFF, plain hex)`
+                                        : `Enter UTF-32 (00000000-0010FFFF, plain hex)`
+                            } 
                         ></textarea>
                     </div>
                 </div>
