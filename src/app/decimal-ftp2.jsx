@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { convert } from "./decimal-ftp-convert";
 
 const DecimalFTP2 = () => {
@@ -14,6 +14,15 @@ const DecimalFTP2 = () => {
     const [outputExponent, setOutputExponent] = useState("");
     const [outputMantissa, setOutputMantissa] = useState("");
     const [copySuccess, setCopySuccess] = useState('');
+    const [outputPlaceholder, setOutputPlaceholder] = useState('Translation');
+
+    /**
+     * This effect is triggered whenever the input, precision, or rounding changes
+     */
+    useEffect(() => {
+        handleConvert();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [input, precision, rounding]);
 
     const splitBinary = (binary) => {
         const sign = binary.substring(0, 1);
@@ -80,6 +89,30 @@ const DecimalFTP2 = () => {
 
 
     const handleConvert = () => {
+        if (input.length === 0) {
+            setBinaryOutput('');
+            setHexOutput('');
+            setOutputSign('');
+            setOutputExponent('');
+            setOutputMantissa('');
+            setOutputPlaceholder('Translation');
+            return;
+        }
+
+        // Check if input is a valid number (strict validation)
+        const trimmedInput = input.trim();
+        const isValidNumber = /^-?\d*\.?\d+([eE][+-]?\d+)?$/.test(trimmedInput);
+        
+        if (!isValidNumber) {
+            setBinaryOutput('');
+            setHexOutput('');
+            setOutputSign('');
+            setOutputExponent('');
+            setOutputMantissa('');
+            setOutputPlaceholder('Invalid input');
+            return;
+        }
+
         try {
             const expDegree = 0;
             const converter = new convert(input, expDegree, precision, rounding);
@@ -89,6 +122,7 @@ const DecimalFTP2 = () => {
 
             setBinaryOutput(formattedBinary);
             setHexOutput(formattedHex);
+            setOutputPlaceholder('Translation');
         } 
         catch (error) {
             console.error("Detailed Conversion Error:", {
@@ -98,13 +132,12 @@ const DecimalFTP2 = () => {
                 inputData: { input, precision, rounding },
             });
 
-            setBinaryOutput(
-                `Error in conversion:\n` +
-                `Message: ${error.message}\n` +
-                `Name: ${error.name}\n` +
-                `Stack Trace:\n${error.stack}`
-            );
+            setBinaryOutput('');
             setHexOutput('');
+            setOutputSign('');
+            setOutputExponent('');
+            setOutputMantissa('');
+            setOutputPlaceholder('Invalid input');
         }
     };
 
@@ -184,11 +217,11 @@ const DecimalFTP2 = () => {
                     </div>
                 </div>
 
-                {/* Swap Button */}
+                {/* Center Column */}
                 <div className="my-3 col-md-2 d-flex align-items-center justify-content-center">
-                    <button className="btn btn-primary" onClick={handleConvert}>
-                        Convert
-                    </button>
+                    <div className="text-center">
+                        <span className="text-muted">Live Conversion</span>
+                    </div>
                 </div>
 
                 {/* Output Section */}
@@ -212,7 +245,7 @@ const DecimalFTP2 = () => {
                             rows="5"
                             value={outputFormat === "binary" ? binaryOutput : hexOutput}
                             readOnly
-                            placeholder="Conversion result will appear here"
+                            placeholder={outputPlaceholder}
                         ></textarea>
                         <button className="copy-btn borderless position-absolute" 
                                 style={{bottom: '8px', right: '8px'}} 
