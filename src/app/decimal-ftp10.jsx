@@ -12,6 +12,7 @@ const DecimalFTP10 = () => {
 
     // Individual output components
     const [outputSign, setOutputSign] = useState("");
+    const [outputCombination, setOutputCombination] = useState("");
     const [outputExponent, setOutputExponent] = useState("");
     const [outputMantissa, setOutputMantissa] = useState("");
     const [copySuccess, setCopySuccess] = useState('');
@@ -28,30 +29,34 @@ const DecimalFTP10 = () => {
     const splitBinary = (binary) => {
         const sign = binary.substring(0, 1);
 
+        let combination = "";
         let exponent = "";
         let mantissa = "";
 
         switch (precision) {
             case "single":
-                exponent = binary.substring(1, 9);
-                mantissa = binary.substring(9, 32);
+                combination = binary.substring(1, 6);
+                exponent = binary.substring(6, 12);
+                mantissa = binary.substring(12, 32);
                 break;
             case "double":
-                exponent = binary.substring(1, 12);
-                mantissa = binary.substring(12, 64);
+                combination = binary.substring(1, 6);
+                exponent = binary.substring(6, 14);
+                mantissa = binary.substring(14, 64);
                 break;
             case "quadruple":
-                exponent = binary.substring(1, 16);
-                mantissa = binary.substring(16, 128);
+                combination = binary.substring(1, 6);
+                exponent = binary.substring(6, 18);
+                mantissa = binary.substring(18, 128);
                 break;
             default:
                 break;
         }
 
-        return { sign, exponent, mantissa };
+        return { sign, combination, exponent, mantissa };
     };
 
-    const splitBinaryBinComponents = (sign, exponent, mantissa) => {
+    const splitBinaryBinComponents = (sign, combination, exponent, mantissa) => {
         // Reverse exponent and split into groups of 4, then reverse again
         let reversedExponent = exponent.split("").reverse().join("");
         let exponentGroups = [];
@@ -68,7 +73,7 @@ const DecimalFTP10 = () => {
         }
         let outputMantissa = mantissaGroups.join(" ").split("").reverse().join("");
 
-        return `${sign} ${outputExponent} ${outputMantissa}`;
+        return `${sign} ${combination} ${outputExponent} ${outputMantissa}`;
     };
 
     const splitHex = (hex) => {
@@ -77,11 +82,12 @@ const DecimalFTP10 = () => {
     };
 
     const splitComponents = (bin, hex) => {
-        const { sign, exponent, mantissa } = splitBinary(bin);
-        const formattedBinary = splitBinaryBinComponents(sign, exponent, mantissa);
+        const { sign, combination, exponent, mantissa } = splitBinary(bin);
+        const formattedBinary = splitBinaryBinComponents(sign, combination, exponent, mantissa);
         const formattedHex = splitHex(hex);
 
         setOutputSign(sign);
+        setOutputCombination(combination);
         setOutputExponent(exponent);
         setOutputMantissa(mantissa);
 
@@ -95,7 +101,8 @@ const DecimalFTP10 = () => {
             setOutputSign('');
             setOutputExponent('');
             setOutputMantissa('');
-            setOutputPlaceholder('Conversion result will appear here');
+            setOutputCombination('');
+            setOutputPlaceholder('Translation');
             return;
         }
 
@@ -109,6 +116,7 @@ const DecimalFTP10 = () => {
             setOutputSign('');
             setOutputExponent('');
             setOutputMantissa('');
+            setOutputCombination('');
             setOutputPlaceholder('Invalid input');
             return;
         }
@@ -137,7 +145,7 @@ const DecimalFTP10 = () => {
 
             setBinaryOutput(formattedBinary);
             setHexOutput(formattedHex);
-            setOutputPlaceholder('Conversion result will appear here');
+            setOutputPlaceholder('Translation');
             
         } catch (error) {
             console.error("Detailed Conversion Error:", {
@@ -152,6 +160,7 @@ const DecimalFTP10 = () => {
             setOutputSign('');
             setOutputExponent('');
             setOutputMantissa('');
+            setOutputCombination('');
             setOutputPlaceholder('Invalid input');
         }
     };
@@ -272,20 +281,26 @@ const DecimalFTP10 = () => {
                         </button>
                     </div>
 
-                    <div className="mt-4 mx-3">
-                        <div className="mb-3">
+                    <div className="my-3 mx-3">
+                        <div className="mb-2">
                             <div className="p-2 border rounded bg-light">
                                 <span className="fw-bold text-black">Sign: </span>
                                 <span className="fs-6 text-black" style={{wordBreak: 'break-all'}}>{outputSign}</span>
                             </div>
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-2">
+                            <div className="p-2 border rounded bg-light">
+                                <span className="fw-bold text-black">Combination: </span>
+                                <span className="fs-6 text-black" style={{wordBreak: 'break-all'}}>{outputCombination}</span>
+                            </div>
+                        </div>
+                        <div className="mb-2">
                             <div className="p-2 border rounded bg-light">
                                 <span className="fw-bold text-black">Exponent: </span>
                                 <span className="fs-6 text-black" style={{wordBreak: 'break-all'}}>{outputExponent}</span>
                             </div>
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-2">
                             <div className="p-2 border rounded bg-light">
                                 <span className="fw-bold text-black">Mantissa: </span>
                                 <span className="fs-6 text-black" style={{wordBreak: 'break-all'}}>{outputMantissa}</span>
