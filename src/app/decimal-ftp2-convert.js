@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-export class convert {
+export class convertToFTP2 {
     constructor(inputNum, expDegree, precision, round) {
         this.expDegree = expDegree;
         this.outputArr = [];
@@ -19,6 +19,9 @@ export class convert {
                 break;
             case "nearest_even":
                 this.roundMthd = 2;
+                break;
+            default:
+                this.roundMthd = -1; // Default to truncate if unknown
                 break;
         }
 
@@ -41,6 +44,12 @@ export class convert {
                 this.expBias = 16383;
                 this.expSize = 15;
                 break;
+
+            default:
+                precision = 1;
+                this.expBias = 127;
+                this.expSize = 8;
+                break;
         }
 
         this.bitSize = precision * 32;
@@ -62,15 +71,15 @@ export class convert {
     process () {
         let isCase = this.chckInf();
 
-        if (isCase == "inf") {
+        if (isCase === "inf") {
             if (this.inputNum < 0) {
                 this.negNum = 1;
             }
             let infExp = this.convertToBin(this.expSize, this.expBias * 2 + 1);
             let infMts = [];
             this.pushToOutput(infExp, infMts);
-            var {binStr, hexStr} = this.getOutputStr();
-            return {binStr, hexStr};
+            var {binStr: binStrInf, hexStr: hexStrInf} = this.getOutputStr();
+            return {binStr: binStrInf, hexStr: hexStrInf};
         }
 
         // If negative
@@ -115,7 +124,7 @@ export class convert {
         }
         
         // Normalize input
-        if (lessOne != 1) {
+        if (lessOne !== 1) {
             for (i = 0; i < countBits - 1; i++) {
                 frcBits.push(intBits.pop());
                 this.expDegree++;
@@ -124,9 +133,9 @@ export class convert {
         else {
             let dnrmCnt = 0;
             let tempDeg = this.expDegree;
-            while (lessOne == 1) {
+            while (lessOne === 1) {
                 temp = frcBits.pop();
-                if (temp == 1) {
+                if (temp === 1) {
                     lessOne = 0
                 }
                 tempDeg--;
@@ -172,10 +181,10 @@ export class convert {
     getOutputStr () {
         var binStr = "";
         var hexStr = "";
-        for (var i = 0; i < this.bitSize; i++) {
+        for (let i = 0; i < this.bitSize; i++) {
             binStr += this.outputArr[i].toString();
         }
-        for (var i = 0; i < this.hexSize; i++) {
+        for (let i = 0; i < this.hexSize; i++) {
             hexStr += this.convertToHex(this.outputArr[i*4], this.outputArr[i*4+1], this.outputArr[i*4+2], this.outputArr[i*4+3]);
         }
         return {binStr, hexStr};
@@ -209,9 +218,12 @@ export class convert {
                     switch (rndStr) {
                         case "Greater":
                         case "Lesser":
-                            if (this.negNum == this.roundMthd) {
+                            if (this.negNum === this.roundMthd) {
                                 this.roundOutput ("Up");
                             }
+                            break;
+                        default:
+                            // No action needed for other cases
                             break;
                     }
                 break;
@@ -221,12 +233,18 @@ export class convert {
                             this.roundOutput("Up");
                             break;
                         case "Even":
-                            if (this.outputArr[this.bitSize - 1] == 1) {
+                            if (this.outputArr[this.bitSize - 1] === 1) {
                                 this.roundOutput("Up");
                             }
                             break;
+                        default:
+                            // No action needed for other cases
+                            break;
                     }
                 break;
+                default:
+                    // No action needed for other cases
+                    break;
             }
         }
     }
@@ -240,13 +258,13 @@ export class convert {
         let i = 0;
 
         // Count Zeroes
-        if (frstBit == 1) {
+        if (frstBit === 1) {
             for (i = 0; i < arrLen; i++) {
-                if (mtsArr.pop() == 0) {
+                if (mtsArr.pop() === 0) {
                     zeroCnt++;
                 }
             }
-            if (zeroCnt == arrLen - 1) {
+            if (zeroCnt === arrLen - 1) {
                 rndStr = "Tied";
             }
             else {
@@ -271,16 +289,20 @@ export class convert {
             case "Down":
                 rndMod = 1;
                 break;
+            default:
+                // Default behavior if rndTo is not recognized
+                rndMod = -1;
+                break;
         }
 
         let currPos = this.bitSize - 1;
         
         // Rounding loop
-        while (parseInt(this.outputArr[currPos].toString()) % 2 != rndMod) {
+        while (parseInt(this.outputArr[currPos].toString()) % 2 !== rndMod) {
             this.outputArr[currPos] = (parseInt(this.outputArr[currPos].toString()) + 1) % 2;
             currPos--;
         }
-        if (this.outputArr[currPos] % 2 == rndMod) {
+        if (this.outputArr[currPos] % 2 === rndMod) {
             this.outputArr[currPos] = (this.outputArr[currPos] + 1) % 2;
         }
     }
@@ -316,7 +338,7 @@ export class convert {
         let i = 0;
         let dstArr = [];
         let srcNum = new BigNumber(tmpNum.toString())
-        while (srcNum != 0) {
+        while (srcNum !== 0) {
             srcNum = srcNum.times(2);
             dstArr.push(srcNum.integerValue(BigNumber.ROUND_FLOOR).abs());
             if (srcNum.integerValue(BigNumber.ROUND_FLOOR).abs().gt(0)) {

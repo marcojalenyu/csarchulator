@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { convert } from "./decimal-ftp-convert";
+import { convertToFTP2 } from "./decimal-ftp2-convert";
 
 const DecimalFTP2 = () => {
     const [input, setInput] = useState("");
@@ -115,7 +115,7 @@ const DecimalFTP2 = () => {
 
         try {
             const expDegree = 0;
-            const converter = new convert(input, expDegree, precision, rounding);
+            const converter = new convertToFTP2(input, expDegree, precision, rounding);
             const { binStr, hexStr } = converter.process();
 
             const { formattedBinary, formattedHex } = splitComponents(binStr, hexStr);

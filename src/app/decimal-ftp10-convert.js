@@ -1,4 +1,4 @@
-export class convertBCD {
+export class convertToFTP10 {
     constructor(inputNum, expDegree, isPositive, precision) {
         this.inputNum = inputNum;
         this.expDegree = parseInt(expDegree);
@@ -12,6 +12,10 @@ export class convertBCD {
 
             case false:
                 this.isNegative = 1;
+                break;
+
+            default:
+                this.isNegative = 0; // Default to positive if value is unexpected
                 break;
         }
 
@@ -27,6 +31,10 @@ export class convertBCD {
 
             case "quadruple":
                 precision = 4;
+                break;
+
+            default:
+                precision = 1; // Default to single precision if value is unexpected
                 break;
         }
 
@@ -91,7 +99,7 @@ export class convertBCD {
         // Add coefficient continuation bits
         for (i = 1; i < this.strLen; i++) {
             bigBitArr[(i - 1) % 3] = this.convertToBin (4, parseInt(this.inputNum[i]));
-            if (i % 3 == 0) {
+            if (i % 3 === 0) {
                 tempArr = this.mapBCD(bigBitArr);
                 for (j = 0; j < tempArr.length; j++) {
                     this.outputStr += tempArr[j];
@@ -123,7 +131,7 @@ export class convertBCD {
             bcdArr[6] = 1;
 
             // One digit over 7
-            if (sumOne == 1) {
+            if (sumOne === 1) {
                 // Get the index of the first instance of 1 in every bit array
                 for (i = 0; i < 3; i++) {
                     indArr[i] = Math.abs(bitArr[i].indexOf(1));
@@ -133,7 +141,7 @@ export class convertBCD {
                 index = 2 - indArr.indexOf(0);
 
                 // Map BCD array based on the other two bit arrays
-                if (indArr.indexOf(1) == 0) {
+                if (indArr.indexOf(1) === 0) {
                     bcdArr[0] = bitArr[0][1];
                     bcdArr[1] = bitArr[0][2];
                     bcdArr[3] = bitArr[index + 1][1];
@@ -158,7 +166,7 @@ export class convertBCD {
                 bcdArr[8] = 1;
 
                 // Map BCD array if all digits have 1 as the most significant bit
-                if (sumOne == 3) {
+                if (sumOne === 3) {
                     bcdArr[0] = 0;
                     bcdArr[1] = 0;
                     bcdArr[3] = 1;

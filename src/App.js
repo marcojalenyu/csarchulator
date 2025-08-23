@@ -18,8 +18,9 @@ function App() {
           <Route index element={<Home />} />
           <Route path="unicode-utf" element={<UnicodeUtf from='Unicode' to='UTF'/>} />
           <Route path="utf-unicode" element={<UnicodeUtf from='UTF' to='Unicode'/>} />
-          <Route path="decimal-ftp2" element={<DecimalFTP2 from='Decimal' to='FTP'/>} />
-          <Route path="decimal-ftp10" element={<DecimalFTP10 from='Decimal' to='BCD'/>} />
+          <Route path="decimal-ftp2" element={<DecimalFTP2 from='Decimal' to='Binary FTP'/>} />
+          <Route path="decimal-ftp10" element={<DecimalFTP10 from='Decimal' to='Decimal FTP'/>} />
+          
           <Route path="*" element={<Error />} />
         </Route>
       </Routes>

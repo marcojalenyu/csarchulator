@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { convertBCD } from "./decimal-bcd-convert.js";
+import { convertToFTP10 } from "./decimal-ftp10-convert.js";
 import { roundDecimal } from './dom_rounding.js';
 
 const DecimalFTP10 = () => {
@@ -138,7 +138,7 @@ const DecimalFTP10 = () => {
                     rounded = roundDecimal(input, 7, rounding, expDegree);
                     break;
             }
-            const converter = new convertBCD(rounded.integer, rounded.exponent, rounded.positive, precision);
+            const converter = new convertToFTP10(rounded.integer, rounded.exponent, rounded.positive, precision);
             const { binStr, hexStr } = converter.process();
 
             const { formattedBinary, formattedHex } = splitComponents(binStr, hexStr);

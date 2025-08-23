@@ -81,6 +81,11 @@ function splitBinary() {
                     output_exponent = output_binary.substring(1, 16);
                     output_mantissa = output_binary.substring(16, 128);
                     break;
+                default:
+                    // Optionally handle unexpected precision
+                    output_exponent = "";
+                    output_mantissa = "";
+                    break;
             }
             break;
         
@@ -100,7 +105,17 @@ function splitBinary() {
                     output_exponent = output_binary.substring(6, 18);
                     output_mantissa = output_binary.substring(18, 128);
                     break;
+                default:
+                    // Optionally handle unexpected precision
+                    output_exponent = "";
+                    output_mantissa = "";
+                    break;
             }
+            break;
+        default:
+            // Optionally handle unexpected representation
+            output_exponent = "";
+            output_mantissa = "";
             break;
     }
 }
@@ -185,6 +200,9 @@ function toggleOutputMode() {
         case "quadruple":
             output_label += "-128";
             break;
+        default:
+            // Optionally handle unexpected precision
+            break;
     }
     output_label_element.innerHTML = output_label;
 }
@@ -201,6 +219,9 @@ function convertToBinaryIEEE754() {
         case "double":
             break
         case "quadruple":
+            break
+        default:
+            // Optionally handle unexpected precision
             break
     }
 
@@ -231,6 +252,9 @@ function convertToDecimalIEEE754() {
             break
         case "quadruple":
             output = window.roundDecimal(input_decimal, 34, input_rounding, input_exponent);
+            break
+        default:
+            // Optionally handle unexpected precision
             break
     }
     input_decimal = output.integer;
@@ -272,7 +296,7 @@ function specialCases() {
     var test_sign;
 
     // Check the sign of the input
-    if (test_input[0] == '-') {
+    if (test_input[0] === '-') {
         test_sign = false;
     } 
     
@@ -284,6 +308,7 @@ function specialCases() {
     var mantissa = 0;
     var hex = 0;
     var exponent_limit = 0;
+    var neg_exponent_limit = 0;
 
     // Check Input
     // console.log("Input Decimal:", test_input);
@@ -317,7 +342,21 @@ function specialCases() {
                     exponent_limit = 6111;
                     neg_exponent_limit = -6176;
                     break;
+                default:
+                    exponent = 0;
+                    mantissa = 0;
+                    hex = 0;
+                    exponent_limit = 0;
+                    neg_exponent_limit = 0;
+                    break;
             }
+            break;
+        default:
+            exponent = 0;
+            mantissa = 0;
+            hex = 0;
+            exponent_limit = 0;
+            neg_exponent_limit = 0;
             break;
     }
     
@@ -329,7 +368,7 @@ function specialCases() {
     } 
 
     // if its NaN
-    if(test_input == "nan" || test_input == "qnan" || test_input == "snan"){
+    if(test_input === "nan" || test_input === "qnan" || test_input === "snan"){
         output_sign = "0";
 
         output_combination = "1".repeat(5); 
@@ -367,7 +406,7 @@ function specialCases() {
     }
     
     // if its +Infinity
-    else if ((test_input == "inf" || (((test_input.replace(/\./g, '').length + parseInt(test_exponent)) > exponent_limit + 1)) && test_input.charAt(0) != '-' && (/^[0-9]+$/.test(test_input) || !isNaN(parseFloat(test_input))))) {
+    else if ((test_input === "inf" || (((test_input.replace(/\./g, '').length + parseInt(test_exponent)) > exponent_limit + 1)) && test_input.charAt(0) !== '-' && (/^[0-9]+$/.test(test_input) || !isNaN(parseFloat(test_input))))) {
         output_sign = "0";
 
         output_combination = "1".repeat(4) + "0"; 
@@ -385,7 +424,7 @@ function specialCases() {
         you_are_my_special = true;
     }
     // if its -Infinity
-    else if((test_input == "-inf" || (((test_input.replace(/[.-]/g, '').length + parseInt(test_exponent)) > exponent_limit + 1) && test_input.charAt(0) == '-' && (/^[0-9]+$/.test(test_input) || !isNaN(parseFloat(test_input)))))){
+    else if((test_input === "-inf" || (((test_input.replace(/[.-]/g, '').length + parseInt(test_exponent)) > exponent_limit + 1) && test_input.charAt(0) === '-' && (/^[0-9]+$/.test(test_input) || !isNaN(parseFloat(test_input)))))){
         output_sign = "1";
 
         output_combination = "1".repeat(4) + "0"; 
@@ -415,7 +454,7 @@ input_form.addEventListener("submit", function (event) {
 
     // Test inputs for special cases
     you_are_my_special = false
-    if (input_representation == "decimal") {
+    if (input_representation === "decimal") {
         specialCases()
     }
     if (you_are_my_special) {
@@ -442,6 +481,10 @@ input_form.addEventListener("submit", function (event) {
         case "decimal":
             convertToDecimalIEEE754();
             break;
+        default:
+            // Optionally handle unexpected representation
+            console.warn("Unknown input_representation:", input_representation);
+            break;
     }
 
     // Toggle Mode
@@ -456,6 +499,9 @@ input_form.addEventListener("submit", function (event) {
         case "decimal":
             splitDecimalBinComponents();
             break;
+        default:
+            // Optionally handle unexpected representation
+            break;
     }
     splitHex();
     
@@ -467,7 +513,7 @@ input_form.addEventListener("submit", function (event) {
 
 // Download as Text
 var download_txt = document.getElementById("download_txt");
-download_txt.addEventListener("click", function () {
+download_txt.addEventListener("click", function (event) {
     event.preventDefault();
 
     // Get representation title and precision number
@@ -482,7 +528,10 @@ download_txt.addEventListener("click", function () {
             break;
         case "quadruple":
             precision_number = "128"
-            break;;
+            break;
+        default:
+            precision_number = "";
+            break;
     }
 
     // Declare filename
@@ -507,6 +556,9 @@ download_txt.addEventListener("click", function () {
             break;
         case "quadruple":
             input_precision = "Quadruple (128-bit)";
+            break;
+        default:
+            // Optionally handle unexpected precision
             break;
     }
     
