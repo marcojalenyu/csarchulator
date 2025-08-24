@@ -1,26 +1,9 @@
 import BigNumber from 'bignumber.js';
 
 export class convertFTP2toDec {
-    constructor(inputNum, expDegree, precision, round) {
-        this.expDegree = expDegree;
-        this.outputArr = [];
+    constructor(inputHex, precision) {
+        this.hexStr = inputHex;
         this.hexLib = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
-        this.negNum = 0;
-
-        switch (round) {
-            case "ceiling":
-                this.roundMthd = 0;
-                break;
-            case "floor":
-                this.roundMthd = 1;
-                break;
-            case "nearest_even":
-                this.roundMthd = 2;
-                break;
-            default:
-                this.roundMthd = -1; // Default to truncate if unknown
-                break;
-        }
 
         switch (precision) {
             case "double":
@@ -45,17 +28,28 @@ export class convertFTP2toDec {
         this.bitSize = precision * 32;
         this.hexSize = this.bitSize / 4;
         this.maxLimit = new BigNumber("2").exponentiatedBy(this.expBias + 1).minus(1);
+    }
 
-        if (expDegree < 0) {
-            this.inputStr = inputNum + "e" + expDegree;
-            this.inputNum = new BigNumber(this.inputStr);
-        }
-        else {
-            this.inputNum = new BigNumber(inputNum);
-            this.inputNum = this.inputNum.times(BigNumber(10).exponentiatedBy(this.expDegree));
+    process() {
+        let binArr = [];
+        let expArr = [];
+        let mntArr = [];
+
+        if (this.hexStr.length !== this.hexSize) {
+            return "Invalid hex length.";
         }
 
-        this.expDegree = 0;
+        for (let i = 0; i < this.hexStr.length; i++) {
+            binArr = binArr.concat(convertHexToBin(hexStr[i]));
+        }
+
+        let sign = binArr[0] ? -1 : 1;
+        expArr = binArr.slice(1, 1 + this.expSize);
+        mntArr = binArr.slice(1 + this.expSize);
+
+        let exp = (this.convertToInt(expArr) - this.expBias).toString();
+        let mnt = this.convertToFract(mntArr).plus(1);
+        return new BigNumber(mnt.toString()).multipliedBy(new BigNumber(2).pow(exp)).multipliedBy(sign);
     }
 
     // Convert integer to binary
@@ -136,27 +130,5 @@ export class convertFTP2toDec {
             binArr = binArr.concat(convertHexToBin(hexStr[i]));
         }
         return convertToFract(binArr);
-    }
-
-    convertFTPHexToDec(hexStr) {
-        let binArr = [];
-        let expArr = [];
-        let mntArr = [];
-
-        if (hexStr.length !== this.hexSize) {
-            return "Invalid hex length.";
-        }
-
-        for (let i = 0; i < hexStr.length; i++) {
-            binArr = binArr.concat(convertHexToBin(hexStr[i]));
-        }
-
-        let sign = binArr[0] ? -1 : 1;
-        expArr = binArr.slice(1, 1 + this.expSize);
-        mntArr = binArr.slice(1 + this.expSize);
-
-        let exp = (this.convertToInt(expArr) - this.expBias).toString();
-        let mnt = this.convertToFract(mntArr).plus(1);
-        return new BigNumber(mnt.toString()).multipliedBy(new BigNumber(2).pow(exp)).multipliedBy(sign);
     }
 }
