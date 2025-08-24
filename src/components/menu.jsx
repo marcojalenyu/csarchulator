@@ -19,6 +19,8 @@ const Menu = ({ isMenuOpen, toggleMenu }) => {
                 <Link className="list-group-item list-group-item-action" to="/utf-unicode" onClick={toggleMenu}>UTF-Unicode</Link>
                 <Link className="list-group-item list-group-item-action" to="/decimal-ftp2" onClick={toggleMenu}>Decimal-Binary FP</Link>                
                 <Link className="list-group-item list-group-item-action" to="/decimal-ftp10" onClick={toggleMenu}>Decimal-Decimal FP</Link>
+                <Link className="list-group-item list-group-item-action" to="/decimal-bcd" onClick={toggleMenu}>Decimal-BCD</Link>
+                <Link className="list-group-item list-group-item-action" to="/bcd-decimal" onClick={toggleMenu}>BCD-Decimal</Link>
               </div>
             </div>
           </div>
