@@ -6,22 +6,23 @@ export class convertFTP2toDec {
         this.hexLib = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
 
         switch (precision) {
-            case "double":
-                precision = 2;
+            case 'double':
                 this.expBias = 1023;
                 this.expSize = 11;
+                this.bitSize = 64;
+                BigNumber.set({ DECIMAL_PLACES: 65000 });
                 break;
-
-            case "quadruple":
-                precision = 4;
+            case 'quadruple':
                 this.expBias = 16383;
                 this.expSize = 15;
+                this.bitSize = 128;
+                BigNumber.set({ DECIMAL_PLACES: 350 });
                 break;
-
-            default:
-                precision = 1;
+            default: // single
                 this.expBias = 127;
                 this.expSize = 8;
+                this.bitSize = 32;
+                BigNumber.set({ DECIMAL_PLACES: 50 });
                 break;
         }
 
@@ -33,7 +34,6 @@ export class convertFTP2toDec {
     process() {
         let binArr = [];
         let expArr = [];
-        let mntArr = [];
 
         if (this.hexStr.length !== this.hexSize) {
             return "Invalid hex length.";
@@ -44,12 +44,18 @@ export class convertFTP2toDec {
         }
 
         let sign = binArr[0] ? -1 : 1;
-        expArr = binArr.slice(1, 1 + this.expSize);
-        mntArr = binArr.slice(1 + this.expSize);
+        let mntArr = binArr.slice(1 + this.expSize);
+        let exp;
+        let mnt = this.convertToFract(mntArr);
+        if (!(binArr.slice(1, 1 + this.expSize).every(bit => bit === 0))) {
+            expArr = binArr.slice(1, 1 + this.expSize);
+            exp = (this.convertToInt(expArr) - this.expBias).toString();
+            mnt = mnt.plus(1);
+        } else {
+            exp = 1 - this.expBias;
+        }
 
-        let exp = (this.convertToInt(expArr) - this.expBias).toString();
-        let mnt = this.convertToFract(mntArr).plus(1);
-        return new BigNumber(mnt.toString()).multipliedBy(new BigNumber(2).pow(exp)).multipliedBy(sign);
+        return mnt.multipliedBy(new BigNumber(2).pow(exp)).multipliedBy(sign);;
     }
 
     // Convert integer to binary
