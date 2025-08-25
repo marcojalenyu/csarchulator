@@ -8,6 +8,7 @@ import Error from './app/error';
 import UnicodeUtf from './app/unicode-utf';
 import DecimalFTP2 from './app/decimal-ftp2';
 import DecimalFTP10 from './app/decimal-ftp10';
+import DecimalBCD from './app/decimal-bcd';
 
 
 function App() {
@@ -20,7 +21,8 @@ function App() {
           <Route path="utf-unicode" element={<UnicodeUtf from='UTF' to='Unicode'/>} />
           <Route path="decimal-ftp2" element={<DecimalFTP2 from='Decimal' to='Binary FTP'/>} />
           <Route path="decimal-ftp10" element={<DecimalFTP10 from='Decimal' to='Decimal FTP'/>} />
-          
+          <Route path="decimal-bcd" element={<DecimalBCD from='Decimal' to='BCD'/>} />
+          <Route path="bcd-decimal" element={<DecimalBCD from='BCD' to='Decimal'/>} />
           <Route path="*" element={<Error />} />
         </Route>
       </Routes>
