@@ -33,7 +33,6 @@ export class convertFTP2toDec {
 
     process() {
         let binArr = [];
-        let expArr = [];
 
         if (this.hexStr.length !== this.hexSize) {
             return "Invalid hex length.";
@@ -45,17 +44,26 @@ export class convertFTP2toDec {
 
         let sign = binArr[0] ? -1 : 1;
         let mntArr = binArr.slice(1 + this.expSize);
+        let expArr = binArr.slice(1, 1 + this.expSize);
         let exp;
         let mnt = this.convertToFract(mntArr);
-        if (!(binArr.slice(1, 1 + this.expSize).every(bit => bit === 0))) {
-            expArr = binArr.slice(1, 1 + this.expSize);
+
+        if (expArr.every(bit => bit === 1)) {
+            if (mntArr.every(bit => bit === 0)) {
+                return sign === -1 ? '-∞' : '∞';
+            } else {
+                return 'NaN';
+            }
+        }
+
+        if (!(expArr.every(bit => bit === 0))) {
             exp = (this.convertToInt(expArr) - this.expBias).toString();
             mnt = mnt.plus(1);
         } else {
             exp = 1 - this.expBias;
         }
 
-        return mnt.multipliedBy(new BigNumber(2).pow(exp)).multipliedBy(sign);;
+        return mnt.multipliedBy(new BigNumber(2).pow(exp)).multipliedBy(sign).toString();
     }
 
     // Convert integer to binary
