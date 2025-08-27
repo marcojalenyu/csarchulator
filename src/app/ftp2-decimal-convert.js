@@ -11,18 +11,21 @@ export class convertFTP2toDec {
 
         switch (precision) {
             case 'double':
+                precision = 2;
                 this.expBias = 1023;
                 this.expSize = 11;
                 this.bitSize = 64;
                 BigNumber.set({ DECIMAL_PLACES: 65000 });
                 break;
             case 'quadruple':
+                precision = 4;
                 this.expBias = 16383;
                 this.expSize = 15;
                 this.bitSize = 128;
                 BigNumber.set({ DECIMAL_PLACES: 350 });
                 break;
             default: // single
+                precision = 1;
                 this.expBias = 127;
                 this.expSize = 8;
                 this.bitSize = 32;
@@ -39,7 +42,7 @@ export class convertFTP2toDec {
         let binArr = [];
 
         if (this.hexStr.length !== this.hexSize) {
-            return "";
+            return "Invalid Hex Length";
         }
 
         for (let i = 0; i < this.hexStr.length; i++) {

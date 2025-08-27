@@ -55,11 +55,6 @@ const FTP2Decimal = () => {
                     setOutputPlaceholder('Invalid hex input');
                     return;
                 }
-                // Pad hex string to correct length
-                hexStr = hexStr.padStart(
-                    precision === "single" ? 8 :
-                    precision === "double" ? 16 : 32, "0"
-                );
             }
 
             // Use your converter
@@ -88,8 +83,12 @@ const FTP2Decimal = () => {
                 }
             }
 
-            setDecimalOutput(decimalStr);
-            setOutputPlaceholder('Translation');
+            if (decimalStr === 'Invalid Hex Length') {
+                setOutputPlaceholder(decimalStr);
+            } else {
+                setDecimalOutput(decimalStr);
+                setOutputPlaceholder('Translation');
+            }
 
         } catch (error) {
             setDecimalOutput('');
