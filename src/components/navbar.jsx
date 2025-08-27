@@ -26,7 +26,7 @@ const Navbar = () => {
 
       <Link className="fs-5 fw-bold d-inline-flex align-items-center" to="/">
         <Logo />
-        <div className="ms-1 font-we">CSARCHulator</div>
+        <span className="ms-1 font-we d-none d-sm-inline">CSARCHulator</span>
       </Link>
       
       <div className="d-flex flex-column align-items-end">

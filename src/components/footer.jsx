@@ -5,7 +5,7 @@ import './styles.css'
 const Footer = () => {
     return (
         <footer className="footer d-flex justify-content-center align-items-center w-100">
-            <p className="m-2">By Marco Yu & Dane Chan. Go to <a className='fw-bold' href='https://linktr.ee/csnotes'>csnotes</a> for notes.</p>
+            <p className="m-2">By @marcojalenyu & @danemarcuschan. Go to <a className='fw-bold' href='https://linktr.ee/csnotes'>csnotes</a> for notes.</p>
         </footer>
     );
 }

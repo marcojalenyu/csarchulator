@@ -9,7 +9,7 @@ const Home = () => {
                 speed={100}
             />
             <p className='fs-3 fw-bold m-0'>I am a free translator for Computer Architecture concepts</p>
-            <p className='fs-5 fw-bold'>(Unicode, BCD, Binary, Boolean Alegbra, etc.)</p>
+            <p className='fs-5 fw-bold'>(Unicode, BCD, Floating-Point, etc.)</p>
         </>
     );
 }
