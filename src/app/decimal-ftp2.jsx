@@ -8,16 +8,15 @@ const DecimalFTP2 = () => {
     const location = useLocation();
     const {
         initialInput = "",
-        initialBinaryOutput = "",
-        initialHexOutput = "",
+        initialOutputFormat = "",
         initialPrecision = "single",
         initialRounding = "truncate"
     } = location.state || {};
 
     const [input, setInput] = useState(initialInput);
-    const [binaryOutput, setBinaryOutput] = useState(initialBinaryOutput);
-    const [hexOutput, setHexOutput] = useState(initialHexOutput);
-    const [outputFormat, setOutputFormat] = useState("binary");
+    const [binaryOutput, setBinaryOutput] = useState("");
+    const [hexOutput, setHexOutput] = useState("");
+    const [outputFormat, setOutputFormat] = useState(initialOutputFormat);
     const [precision, setPrecision] = useState(initialPrecision);
     const [rounding, setRounding] = useState(initialRounding);
 
@@ -168,8 +167,9 @@ const DecimalFTP2 = () => {
         navigate("/ftp2-decimal", { 
             state: { 
                 initialInput: currentOutput,
+                initialInputFormat: outputFormat,
                 initialPrecision: precision,
-                initialRounding: rounding
+                initialRounding: rounding,
             } 
         });
     };

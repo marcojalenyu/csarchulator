@@ -9,12 +9,13 @@ const FTP2Decimal = () => {
     const {
         initialInput = "",
         initialDecimalOutput = "",
+        initialInputFormat = "binary",
         initialPrecision = "single",
         initialRounding = "truncate"
     } = location.state || {};
 
     const [input, setInput] = useState(initialInput);
-    const [inputFormat, setInputFormat] = useState("binary");
+    const [inputFormat, setInputFormat] = useState(initialInputFormat);
     const [precision, setPrecision] = useState(initialPrecision);
     const [rounding, setRounding] = useState(initialRounding);
     const [decimalOutput, setDecimalOutput] = useState(initialDecimalOutput);
@@ -111,7 +112,8 @@ const FTP2Decimal = () => {
             state: {
                 initialInput: decimalOutput,
                 initialPrecision: precision,
-                initialRounding: rounding
+                initialRounding: rounding,
+                initialOutputFormat: inputFormat
             }
         });        
     };
