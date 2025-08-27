@@ -85,6 +85,7 @@ const FTP2Decimal = () => {
 
             if (decimalStr === 'Invalid Hex Length') {
                 setOutputPlaceholder(decimalStr);
+                setDecimalOutput('');
             } else {
                 setDecimalOutput(decimalStr);
                 setOutputPlaceholder('Translation');
