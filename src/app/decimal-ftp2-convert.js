@@ -88,83 +88,50 @@ export class convertToFTP2 {
             this.inputNum = this.inputNum.abs();
         }
 
-        let tempNum = new BigNumber(this.inputNum.toString());
-        let countBits = 1;
-        let i = 0;
-        let lessOne = 0;
-        let temp = 0;
+        let exp = 0;
+        let num = new BigNumber(this.inputNum);
 
-        // Count the number of bits used for the integer
-        while (tempNum >= 2) {
-            tempNum = tempNum.dividedBy(2);
-            countBits++;
+        if (num.isZero()) {
+            // Zero special case
+            let expBits = this.convertToBin(this.expSize, 0).reverse();
+            let mantissaBits = Array(this.bitSize - (this.expSize + 1)).fill(0);
+            this.pushToOutput(expBits, mantissaBits);
+            var {binStr, hexStr} = this.getOutputStr();
+            return {binStr, hexStr};
         }
 
-        // Flag if input is less than one
-        if (tempNum < 1) {
-            lessOne = 1;
+        // Normalize so that 1 <= num < 2
+        while (num.gte(2)) {
+            num = num.dividedBy(2);
+            exp++;
+        }
+        while (num.lt(1)) {
+            num = num.times(2);
+            exp--;
         }
 
-        // Get binary representation for integer portion
-        let intPart = this.inputNum.integerValue(BigNumber.ROUND_FLOOR);
-        let intBitsTemp = this.convertToBin(countBits, intPart);
-        let intBits = [];
+        // Remove the implicit leading 1 for mantissa
+        num = num.minus(1);
 
-        // Get binary representation for fractional portion
-        let frcPart = this.inputNum.abs() - this.inputNum.abs().integerValue(BigNumber.ROUND_FLOOR);
-        let frcBitsTemp = this.convertFract(frcPart);
-        let frcBits = [];
-
-        // Flip arrays
-        for (i = frcBitsTemp.length; i > 0; i--) {
-            frcBits.push(frcBitsTemp.pop());
-        }
-        for (i = 0; i < countBits; i++) {
-            intBits.push(intBitsTemp.pop());
-        }
-        
-        // Normalize input
-        if (lessOne !== 1) {
-            for (i = 0; i < countBits - 1; i++) {
-                frcBits.push(intBits.pop());
-                this.expDegree++;
+        // Get mantissa bits
+        let mantissaBits = [];
+        let mantissaLen = this.bitSize - (this.expSize + 1);
+        for (let i = 0; i < mantissaLen; i++) {
+            num = num.times(2);
+            if (num.gte(1)) {
+                mantissaBits.push(1);
+                num = num.minus(1);
+            } else {
+                mantissaBits.push(0);
             }
         }
-        else {
-            let dnrmCnt = 0;
-            let tempDeg = this.expDegree;
-            while (lessOne === 1) {
-                temp = frcBits.pop();
-                if (temp === 1) {
-                    lessOne = 0
-                }
-                tempDeg--;
-                if (tempDeg <= this.expBias * -1) {
-                    dnrmCnt++;
-                }
-                if (dnrmCnt + this.expSize > this.bitSize - 1) {
-                    break;
-                }
-            }
-            if (dnrmCnt > 0) {
-                frcBits.push(1);
-                for (i = 1; i < dnrmCnt; i++) {
-                    frcBits.push(0);
-                }
-                tempDeg = this.expBias * -1;
-            }
-            this.expDegree = tempDeg;
-        }
 
-        // Get binary representation for exponent
-        let expBits = this.convertToBin(this.expSize, (this.expDegree + this.expBias).toString());
+        // Calculate exponent bits
+        let expBits = this.convertToBin(this.expSize, exp + this.expBias).reverse();
 
-        this.pushToOutput(expBits, frcBits);
-        // this.printOutput ();
+        this.pushToOutput(expBits, mantissaBits);
 
-        // Return binary and hex strings
-        var {binStr, hexStr} = this.getOutputStr();
-
+        ({binStr, hexStr} = this.getOutputStr());
         return {binStr, hexStr};
     }
 
@@ -199,11 +166,11 @@ export class convertToFTP2 {
 
         // Push exponent and integer to output
         for (i = 0; i < this.expSize; i++) {
-            this.outputArr.push(expArr.pop());
+            this.outputArr.push(expArr.shift());
         }
         for (i = 0; i < this.bitSize - (this.expSize + 1); i++) {
             if (mtsArr.length > 0) {
-                this.outputArr.push(mtsArr.pop());
+                this.outputArr.push(mtsArr.shift());
             }
             else {
                 this.outputArr.push(0);

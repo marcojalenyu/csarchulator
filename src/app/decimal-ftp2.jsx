@@ -8,7 +8,7 @@ const DecimalFTP2 = () => {
     const location = useLocation();
     const {
         initialInput = "",
-        initialOutputFormat = "",
+        initialOutputFormat = "binary",
         initialPrecision = "single",
         initialRounding = "truncate"
     } = location.state || {};
@@ -236,7 +236,7 @@ const DecimalFTP2 = () => {
                             rows="5"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder="Enter a decimal number"
+                            placeholder="Enter a decimal number (exponents allowed; e.g. 1.5e-10)"
                         ></textarea>
                     </div>
                 </div>

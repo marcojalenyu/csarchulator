@@ -144,7 +144,7 @@ const FTP2Decimal = () => {
                             rows="5"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder={`Enter a binary floating-point value in the selected format`}
+                            placeholder={`Enter a floating-point value in the selected format`}
                         ></textarea>
                     </div>
                 </div>
