@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { convertToFTP2 } from "./decimal-ftp2-convert";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const DecimalFTP2 = () => {
-    const [input, setInput] = useState("");
-    const [binaryOutput, setBinaryOutput] = useState("");
-    const [hexOutput, setHexOutput] = useState("");
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const {
+        initialInput = "",
+        initialBinaryOutput = "",
+        initialHexOutput = "",
+        initialPrecision = "single",
+        initialRounding = "truncate"
+    } = location.state || {};
+
+    const [input, setInput] = useState(initialInput);
+    const [binaryOutput, setBinaryOutput] = useState(initialBinaryOutput);
+    const [hexOutput, setHexOutput] = useState(initialHexOutput);
     const [outputFormat, setOutputFormat] = useState("binary");
-    const [precision, setPrecision] = useState("single");
-    const [rounding, setRounding] = useState("truncate");
+    const [precision, setPrecision] = useState(initialPrecision);
+    const [rounding, setRounding] = useState(initialRounding);
 
     // Individual output components
     const [outputSign, setOutputSign] = useState("");
@@ -149,6 +161,18 @@ const DecimalFTP2 = () => {
             setCopySuccess('');
         }, 2000);
     }
+    
+    // This function swaps the input and output fields
+    const handleSwap = () => {
+        const currentOutput = outputFormat === "binary" ? binaryOutput : hexOutput;
+        navigate("/ftp2-decimal", { 
+            state: { 
+                initialInput: currentOutput,
+                initialPrecision: precision,
+                initialRounding: rounding
+            } 
+        });
+    };
 
     return (
         <div className="container my-4 flex-grow-1 text-start">
@@ -217,11 +241,12 @@ const DecimalFTP2 = () => {
                     </div>
                 </div>
 
-                {/* Center Column */}
                 <div className="my-3 col-md-2 d-flex align-items-center justify-content-center">
-                    <div className="text-center">
-                        <span className="text-muted">Live Conversion</span>
-                    </div>
+                    <button className='btn btn-primary' onClick={handleSwap}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                            <path fillRule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5m14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5"/>
+                        </svg>
+                    </button>
                 </div>
 
                 {/* Output Section */}

@@ -1,8 +1,12 @@
 import BigNumber from 'bignumber.js';
 
 export class convertFTP2toDec {
-    constructor(inputHex, precision) {
-        this.hexStr = inputHex;
+    constructor(input, precision, inputType = 'hex') {
+        if (inputType === 'binary') {
+            this.hexStr = this.convertBinToHex(input);
+        } else {
+            this.hexStr = input;
+        }
         this.hexLib = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
 
         switch (precision) {
@@ -35,11 +39,11 @@ export class convertFTP2toDec {
         let binArr = [];
 
         if (this.hexStr.length !== this.hexSize) {
-            return "Invalid hex length.";
+            return "";
         }
 
         for (let i = 0; i < this.hexStr.length; i++) {
-            binArr = binArr.concat(convertHexToBin(hexStr[i]));
+            binArr = binArr.concat(this.convertHexToBin(this.hexStr[i]));
         }
 
         let sign = binArr[0] ? -1 : 1;
@@ -134,15 +138,25 @@ export class convertFTP2toDec {
 
     // Convert one hex to binary
     convertHexToBin(hex) {
-        const dec = hexLib.indexOf(hex);
-        return convertToBin(4, dec).reverse();
+        const dec = this.hexLib.indexOf(hex);
+        return this.convertToBin(4, dec).reverse();
     }
 
     convertHexToFrac(hexStr) {
         let binArr = [];
         for (let i = 0; i < hexStr.length; i++) {
-            binArr = binArr.concat(convertHexToBin(hexStr[i]));
+            binArr = binArr.concat(this.convertHexToBin(hexStr[i]));
         }
-        return convertToFract(binArr);
+        return this.convertToFract(binArr);
+    }
+
+    convertBinToHex(binStr) {
+        let hexStr = "";
+        for (let i = 0; i < binStr.length; i += 4) {
+            const binNibble = binStr.slice(i, i + 4);
+            const hexDigit = this.convertToHex(...binNibble.split("").map(Number));
+            hexStr += hexDigit;
+        }
+        return hexStr;
     }
 }
