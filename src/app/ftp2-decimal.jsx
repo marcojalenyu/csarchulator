@@ -38,17 +38,11 @@ const FTP2Decimal = () => {
         try {
             if (inputFormat === "binary") {
                 // Remove spaces and validate
-                const binStr = input.replace(/\s+/g, "");
-                if (!/^[01]+$/.test(binStr)) {
+                hexStr = input.replace(/\s+/g, "");
+                if (!/^[01]+$/.test(hexStr)) {
                     setOutputPlaceholder('Invalid binary input');
                     return;
                 }
-                
-                // Convert binary to hex
-                hexStr = parseInt(binStr, 2).toString(16).toUpperCase().padStart(
-                    precision === "single" ? 8 :
-                    precision === "double" ? 16 : 32, "0"
-                );
             } else {
                 // Remove spaces and validate
                 hexStr = input.replace(/\s+/g, "").toUpperCase();
@@ -84,7 +78,7 @@ const FTP2Decimal = () => {
                 }
             }
 
-            if (decimalStr === 'Invalid Hex Length') {
+            if (decimalStr === 'Invalid Hex Length' || decimalStr === "Invalid Bin Length") {
                 setOutputPlaceholder(decimalStr);
                 setDecimalOutput('');
             } else {
@@ -95,6 +89,7 @@ const FTP2Decimal = () => {
         } catch (error) {
             setDecimalOutput('');
             setOutputPlaceholder('Invalid input');
+            console.log(error)
         }
     };
 

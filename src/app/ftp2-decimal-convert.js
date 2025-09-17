@@ -2,13 +2,9 @@ import BigNumber from 'bignumber.js';
 
 export class convertFTP2toDec {
     constructor(input, precision, inputType = 'hex') {
-        if (inputType === 'binary') {
-            this.hexStr = this.convertBinToHex(input);
-        } else {
-            this.hexStr = input;
-        }
+        this.hexStr = input;
+        this.inputType = inputType;
         this.hexLib = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
-
         switch (precision) {
             case 'double':
                 precision = 2;
@@ -41,13 +37,22 @@ export class convertFTP2toDec {
     process() {
         let binArr = [];
 
-        if (this.hexStr.length !== this.hexSize) {
-            return "Invalid Hex Length";
+        if (this.inputType === 'hex') {
+            if (this.hexStr.length !== this.hexSize) {
+                return "Invalid Hex Length";
+            }
+            for (let i = 0; i < this.hexStr.length; i++) {
+                binArr = binArr.concat(this.convertHexToBin(this.hexStr[i]));
+            }
+        } else {
+            if (this.hexStr.length !== this.bitSize) {
+                return "Invalid Bin Length";
+            }
+            binArr = Array.from(this.hexStr, bit => parseInt(bit, 10));
+            // this.hexStr = this.hexStr.split("").reverse().join("");
         }
 
-        for (let i = 0; i < this.hexStr.length; i++) {
-            binArr = binArr.concat(this.convertHexToBin(this.hexStr[i]));
-        }
+        console.log(binArr, this.hexStr, this.hexStr.length)
 
         let sign = binArr[0] ? -1 : 1;
         let mntArr = binArr.slice(1 + this.expSize);
